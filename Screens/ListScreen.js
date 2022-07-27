@@ -1,48 +1,42 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 
-
-const ListScreen = ({navigation}) => {
+let App;
+export default App = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
+  const getMovies = async () => {
+    try {
+      const response = await fetch('https://reactnative.dev/movies.json');
+      const json = await response.json();
+      setData(json.movies);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch('https://investiga.ugr.es/wp-json/datos-abiertos/v1/investigadores/')
-      .then(response => response.json())
-      .then(json => setData[json.investigadores])
-      .catch(error => alert(error))
-      .finally(() => setLoading(false));
+    getMovies();
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{flex: 1, padding: 24}}>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <FlatList
           data={data}
-          keyExtractor={({id_ugrinvestiga}, index) => id_ugrinvestiga}
-          renderItem={({item}) => <Text>{item.nombre}</Text>}
+          keyExtractor={({id}, index) => id}
+          renderItem={({item}) => (
+            <Text>
+              {item.title}, {item.releaseYear}
+            </Text>
+          )}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-export default ListScreen;
