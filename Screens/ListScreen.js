@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 let App;
 export default App = () => {
@@ -28,10 +34,13 @@ export default App = () => {
         <ActivityIndicator />
       ) : (
         <FlatList
+          style={{fontSize: '20'}}
           data={data}
           keyExtractor={({id}, index) => id}
           renderItem={({item}) => (
-            <Text>
+            <Text style={styles.listText}>
+              {item.id}
+              {'.'}
               {item.title}, {item.releaseYear}
             </Text>
           )}
@@ -40,3 +49,13 @@ export default App = () => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  listText: {
+    fontFamily: 'Cochin',
+    fontSize: 30,
+    textAlign: 'justify',
+    alignItems: 'center',
+    color: 'black',
+    marginTop: '5%',
+  },
+});
